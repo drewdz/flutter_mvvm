@@ -4,9 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mvvm_course/presentation/resources/assets_manager.dart';
 import 'package:mvvm_course/presentation/resources/values_manager.dart';
 
+import '../../domain/model.dart';
 import '../resources/color_manager.dart';
 import '../resources/routes_manager.dart';
 import '../resources/strings_manager.dart';
+import 'onboarding_view_model.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({Key? key}) : super(key: key);
@@ -16,77 +18,80 @@ class OnboardingView extends StatefulWidget {
 }
 
 class _OnboardingViewState extends State<OnboardingView> {
-  late final List<SliderState> _list = _getSliderState();
   PageController _controller = PageController(initialPage: 0);
-  int _currentIndex = 0;
+  OnboardingViewModel _viewModel = OnboardingViewModel();
 
-  List<SliderState> _getSliderState() =>
-      [
-        SliderState(
-            StringsManager.onboardingTitle1, StringsManager.onboardingSubTitle1,
-            ImageAssets.onboardingLogo1),
-        SliderState(
-            StringsManager.onboardingTitle2, StringsManager.onboardingSubTitle2,
-            ImageAssets.onboardingLogo2),
-        SliderState(
-            StringsManager.onboardingTitle3, StringsManager.onboardingSubTitle3,
-            ImageAssets.onboardingLogo3),
-        SliderState(
-            StringsManager.onboardingTitle4, StringsManager.onboardingSubTitle4,
-            ImageAssets.onboardingLogo4)
-      ];
+  @override
+  void initState() {
+    //  start the view model
+    _viewModel.start();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorManager.bodyBackground,
-      appBar: AppBar(
-        backgroundColor: ColorManager.bodyBackground,
-        elevation: AppSize.appBarElevation,
-        systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: ColorManager.appBar,
-            statusBarBrightness: Brightness.dark,
-            statusBarIconBrightness: Brightness.dark
-        ),
-
-      ),
-      body: PageView.builder(
-        controller: _controller,
-        itemCount: _list.length,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        itemBuilder: (context, index) {
-          return OnboardingViewUI(_list[index]);
-        },
-      ),
-      bottomSheet: Container(
-        color: ColorManager.bodyBackground,
-        height: AppSize.bottomSheet,
-        child: Column(
-          children: [
-            Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.restorablePushReplacementNamed(context, Routes.loginRoute);
-                  }, 
-                  child: Text(
-                  StringsManager.commonSkip,
-                  style: Theme.of(context).textTheme.subtitle2,
-                  textAlign: TextAlign.end,
-                ))),
-            _getBottomSheet()
-          ],
-        ),
-      ),
+    return StreamBuilder<OnboardingState>(
+      stream: _viewModel.outputOnboardingState,
+      builder: (context, snapShot) {
+        return _getContentWidget(snapShot.data);
+      }
     );
   }
 
+  Widget _getContentWidget(OnboardingState? state) {
+    if (state == null) {
+        return Container();
+      }
+      else {
+      return Scaffold(
+        backgroundColor: ColorManager.bodyBackground,
+        appBar: AppBar(
+          backgroundColor: ColorManager.bodyBackground,
+          elevation: AppSize.appBarElevation,
+          systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: ColorManager.appBar,
+              statusBarBrightness: Brightness.dark,
+              statusBarIconBrightness: Brightness.dark
+          ),
 
-  Widget _getBottomSheet() {
+        ),
+        body: PageView.builder(
+          controller: _controller,
+          itemCount: state.slideCount,
+          onPageChanged: _viewModel.onIndexChange,
+          itemBuilder: (context, index) {
+            return OnboardingViewUI(state.sliderState);
+          },
+        ),
+        bottomSheet: Container(
+          color: ColorManager.bodyBackground,
+          height: AppSize.bottomSheet,
+          child: Column(
+            children: [
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                      onPressed: () {
+                        Navigator.restorablePushReplacementNamed(
+                            context, Routes.loginRoute);
+                      },
+                      child: Text(
+                        StringsManager.commonSkip,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .subtitle2,
+                        textAlign: TextAlign.end,
+                      ))),
+              _getBottomSheet(state)
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _getBottomSheet(OnboardingState state) {
     return Container(
       color: ColorManager.primary,
       child: Row(
@@ -102,18 +107,17 @@ class _OnboardingViewState extends State<OnboardingView> {
                 child: SvgPicture.asset(ImageAssets.chevronLeft),
               ),
               onTap: () {
-                //  go to previous slide
-                _controller.animateToPage(_decrementIndex(), duration: AppDuration.onboardingSlide, curve: Curves.easeInOut);
+                //  TODO: go to previous slide
               },
             ),
           ),
           //  page indicator
           Row(
             children: [
-              for(int i = 0; i < _list.length; i++)
+              for(int i = 0; i < state.slideCount; i++)
                 Padding(
                   padding: const EdgeInsets.all(AppPadding.contentPadding),
-                  child: _getPageIndicator(i),
+                  child: _getPageIndicator(i, state.index),
                 )
             ],
           ),
@@ -127,8 +131,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                   child: SvgPicture.asset(ImageAssets.chevronRight),
                 ),
                 onTap: () {
-                  //  go to next slide
-                  _controller.animateToPage(_incrementIndex(), duration: AppDuration.onboardingSlide, curve: Curves.easeInOut);
+                  //  TODO: go to next slide
                 }),
           ),
         ],
@@ -136,31 +139,26 @@ class _OnboardingViewState extends State<OnboardingView> {
     );
   }
 
-  int _decrementIndex() {
-    _currentIndex--;
-    if (_currentIndex < 0) _currentIndex = _list.length - 1;
-    return _currentIndex;
-  }
-
-  int _incrementIndex() {
-    _currentIndex++;
-    if (_currentIndex >= _list.length) _currentIndex = 0;
-    return _currentIndex;
-  }
-
-  Widget _getPageIndicator(int index) {
-    if (index == _currentIndex) {
+  Widget _getPageIndicator(int index, int currentIndex) {
+    if (index == currentIndex) {
       return SvgPicture.asset(ImageAssets.circleOpen);
     }
     else{
       return SvgPicture.asset(ImageAssets.circleFilled);
     }
   }
+
+  @override
+  void dispose() {
+    _viewModel.dispose();
+    super.dispose();
+  }
 }
 
 class OnboardingViewUI extends StatelessWidget {
-  SliderState _sliderState;
-  OnboardingViewUI(this._sliderState, {Key? key}) : super(key: key);
+  final SliderState _state;
+
+  OnboardingViewUI(this._state, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -171,29 +169,20 @@ class OnboardingViewUI extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(AppPadding.headingPadding),
           child: Text(
-            _sliderState.title,
+            _state.title,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headline1),
         ),
         Padding(
           padding: const EdgeInsets.all(AppPadding.headingPadding),
           child: Text(
-              _sliderState.subTitle,
+              _state.subTitle,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.subtitle1),
         ),
         const SizedBox(height: AppSize.onboardingSpace),
-        SvgPicture.asset(_sliderState.image)
+        SvgPicture.asset(_state.image)
       ],
     );
   }
-}
-
-
-class SliderState {
-  String title;
-  String subTitle;
-  String image;
-
-  SliderState(this.title, this.subTitle, this.image);
 }
