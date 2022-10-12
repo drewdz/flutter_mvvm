@@ -13,6 +13,7 @@ class ColorManager {
   static Color bodyBackground = const Color(0xffffffff);
   static Color error = const Color(0xffe61f34);
   static Color appBarShadow = const Color(0xb3ed9728);
+  static Color appBar = const Color(0xffffffff);
   static Color rippleAndSplash = const Color(0xb3ed9728);
   static Color appBarTitle = const Color(0xffffffff);
   static Color buttonText = const Color(0xffffffff);

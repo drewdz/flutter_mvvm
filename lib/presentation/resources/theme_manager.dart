@@ -51,6 +51,7 @@ ThemeData getApplicationTheme() {
     textTheme: TextTheme(
       headline1: getSemiBoldStyle(fontColor: ColorManager.headline1, fontSize: FontSizeConstants.headline1),
       subtitle1: getMediumStyle(fontColor: ColorManager.subtitle1, fontSize: FontSizeConstants.subtitle1),
+      subtitle2: getMediumStyle(fontColor: ColorManager.primary, fontSize: FontSizeConstants.subtitle1),
       caption: getRegularStyle(fontColor: ColorManager.caption, fontSize: FontSizeConstants.caption),
       bodyText1: getRegularStyle(fontColor: ColorManager.bodyText, fontSize: FontSizeConstants.bodyText)
     ),
