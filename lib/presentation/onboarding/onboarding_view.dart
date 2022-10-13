@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mvvm_course/presentation/resources/assets_manager.dart';
 import 'package:mvvm_course/presentation/resources/values_manager.dart';
 
-import '../../domain/model.dart';
+import '../../domain/model/model.dart';
 import '../resources/color_manager.dart';
 import '../resources/routes_manager.dart';
 import '../resources/strings_manager.dart';
