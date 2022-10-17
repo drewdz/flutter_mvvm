@@ -45,6 +45,8 @@ dependencies:
   data_connection_checker: ^0.3.4
   pretty_dio_logger: ^1.2.0-beta-1
   shared_preferences: ^2.0.15
+  device_info_plus: ^6.0.0
+  freezed: ^2.2.0
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +83,7 @@ flutter:
     - assets/left_arrow_ic.svg
     - assets/right_arrow_ic.svg
     - assets/solid_circle_ic.svg
+    - assets/login_ic.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

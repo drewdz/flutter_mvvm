@@ -8,6 +8,8 @@ class ImageAssets {
   static const String onboardingLogo3 = "$IMAGE_PATH/onboarding_logo3.svg";
   static const String onboardingLogo4 = "$IMAGE_PATH/onboarding_logo4.svg";
 
+  static const String iconLogin = "$IMAGE_PATH/login_ic.svg";
+
   static const String circleOpen = "$IMAGE_PATH/hollow_circle_ic.svg";
   static const String circleFilled = "$IMAGE_PATH/solid_circle_ic.svg";
   static const String chevronLeft = "$IMAGE_PATH/left_arrow_ic.svg";

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:mvvm_course/app/functions.dart';
 import 'package:mvvm_course/data/network/failure.dart';
 import 'package:mvvm_course/data/repository/repository.dart';
 import 'package:mvvm_course/domain/use_case/base_use_case.dart';
@@ -12,7 +13,8 @@ class LoginUseCase implements BaseUseCase<LoginUseCaseInput, Login> {
 
   @override
   Future<Either<Failure, Login>> execute(LoginUseCaseInput input) async {
-    return await _repository.login(LoginRequest(input.email, input.password, "imei", "deviceType"));
+    DeviceInfo deviceInfo = await getDeviceDetails();
+    return await _repository.login(LoginRequest(input.email, input.password, deviceInfo.identifier, deviceInfo.name));
   }
 }
 

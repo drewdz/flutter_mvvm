@@ -24,6 +24,7 @@ class AppSize {
   static const double borderWidth = 1.5;
   static const double borderRadius = 8.0;
   static const double topMargin = 40.0;
+  static const double topMarginLogin = 100.0;
   static const double onboardingSpace = 60.0;
   static const double bottomSheet = 100.0;
   static const double bottomSheetClick = 20.0;
