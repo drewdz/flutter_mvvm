@@ -8,7 +8,7 @@ abstract class RemoteDataSourceBase {
 }
 
 class RemoteDataSource implements RemoteDataSourceBase {
-  AppServiceClient _appServiceClient;
+  final AppServiceClient _appServiceClient;
 
   RemoteDataSource(this._appServiceClient);
 

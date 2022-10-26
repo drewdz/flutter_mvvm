@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mvvm_course/app/app_preferences.dart';

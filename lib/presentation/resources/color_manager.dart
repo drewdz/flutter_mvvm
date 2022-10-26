@@ -23,4 +23,6 @@ class ColorManager {
   static Color labelText = const Color(0xff707070);
   static Color borderEnabled = const Color(0xff737477);
   static Color borderFocused = const Color(0xffed9728);
+  static Color stateMessage = const Color(0xff000000);
+  static Color statePopupBackground = const Color(0x40000000);
 }

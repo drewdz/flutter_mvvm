@@ -14,6 +14,7 @@ class FontWeightConstants {
 
 class FontSizeConstants{
   static const double appBarTitle = 16.0;
+  static const double stateMessage = 16.0;
   static const double headline1 = 16.0;
   static const double subtitle1 = 14.0;
   static const double caption = 12.0;
